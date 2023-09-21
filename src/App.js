@@ -12,17 +12,6 @@ function App() {
     return (
         <ChakraProvider theme={theme}>
             <Router>
-                <Flex
-                    borderBottom="1px solid black"
-                    justify="space-between"
-                    fontSize="xl"
-                >
-                    <Link to="/">Home</Link>
-                    <Link to="/login">Login</Link>
-                    <Link to="/signup">SignUp</Link>
-                    <Link to="/reset-password">Reset Password</Link>
-                    <ColorModeSwitcher justifySelf="flex-end" />
-                </Flex>
                 <Routes>
                     <Route exact path="/" element={<Home />} />
                     <Route exact path="/login" element={<LoginPage />} />
