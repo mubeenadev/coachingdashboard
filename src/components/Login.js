@@ -87,7 +87,7 @@ function Login() {
                         </HStack>
                         <Stack spacing="6">
                             <Button
-                                onSubmit={(e) => {
+                                onClick={(e) => {
                                     e.preventDefault();
                                     logInWithEmailAndPassword(email, password);
                                 }}
