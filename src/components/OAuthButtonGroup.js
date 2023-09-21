@@ -27,10 +27,10 @@ const GoogleIcon = createIcon({
 
 const providers = [{ name: "Google", icon: <GoogleIcon /> }];
 
-export const OAuthButtonGroup = () => (
+export const OAuthButtonGroup = ({ onClick }) => (
     <ButtonGroup variant="secondary" spacing="4">
         {providers.map(({ name, icon }) => (
-            <Button key={name} flexGrow={1}>
+            <Button key={name} flexGrow={1} onClick={onClick}>
                 <VisuallyHidden>Sign in with {name}</VisuallyHidden>
                 {icon}
             </Button>
