@@ -42,6 +42,7 @@ const db = getFirestore(app);
 // Remove if not using Google Auth
 const googleProvider = new GoogleAuthProvider();
 const signInWithGoogle = async () => {
+    console.log("here");
     try {
         const res = await signInWithPopup(auth, googleProvider);
         const user = res.user;
@@ -78,6 +79,7 @@ const registerWithEmailAndPassword = async (name, email, password) => {
             uid: user.uid,
             name,
             authProvider: "local",
+            userType: "coa",
             email,
         });
     } catch (err) {
@@ -87,6 +89,7 @@ const registerWithEmailAndPassword = async (name, email, password) => {
 };
 
 const sendPasswordReset = async (email) => {
+    console.log("here : ", email);
     try {
         await sendPasswordResetEmail(auth, email);
         alert("Password reset link sent!");
