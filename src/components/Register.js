@@ -20,6 +20,8 @@ import {
     Input,
     Stack,
     Text,
+    Radio,
+    RadioGroup,
 } from "@chakra-ui/react";
 import { OAuthButtonGroup } from "./OAuthButtonGroup";
 import { PasswordField } from "./PasswordField";
@@ -28,16 +30,23 @@ function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
+    const [userType, setUserType] = useState("coach");
     const [user, loading] = useAuthState(auth);
     const navigate = useNavigate();
     const register = () => {
         if (!name) alert("Please enter name");
         console.log("here");
-        registerWithEmailAndPassword(name, email, password);
+        registerWithEmailAndPassword(name, email, password, userType);
     };
     useEffect(() => {
         if (loading) return;
-        if (user) navigate("/");
+
+        if (user) {
+            console.log("user: ", user);
+            userType == "coach"
+                ? navigate(`/coach/${user.uid}`)
+                : navigate(`/coachee/${user.uid}`);
+        }
     }, [user, loading, navigate]);
 
     return (
@@ -95,6 +104,18 @@ function Register() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
+                            <FormControl>
+                                <FormLabel htmlFor="usertype">Type</FormLabel>
+                                <RadioGroup
+                                    onChange={setUserType}
+                                    value={userType}
+                                >
+                                    <Stack direction="row">
+                                        <Radio value="coach">Coach</Radio>
+                                        <Radio value="coachee">Coachee</Radio>
+                                    </Stack>
+                                </RadioGroup>
+                            </FormControl>
                         </Stack>
                         <HStack justify="space-between">
                             <Checkbox defaultChecked>Remember me</Checkbox>
@@ -103,6 +124,7 @@ function Register() {
                             <Button
                                 onClick={(e) => {
                                     e.preventDefault();
+                                    console.log(userType);
                                     register();
                                 }}
                             >
