@@ -8,6 +8,7 @@ import { Box, Button } from "@chakra-ui/react";
 function Home() {
     const [user, loading] = useAuthState(auth);
     const [name, setName] = useState("");
+    const [userType, setUserType] = useState("");
     const navigate = useNavigate();
     const fetchUserName = useCallback(async () => {
         try {
@@ -18,6 +19,7 @@ function Home() {
             const doc = await getDocs(q);
             const data = doc.docs[0].data();
             setName(data.name);
+            setUserType(data.userType);
         } catch (err) {
             console.error(err);
             alert("An error occured while fetching user data");
@@ -26,6 +28,11 @@ function Home() {
     useEffect(() => {
         if (loading) return;
         if (!user) return navigate("/");
+        else {
+            userType === "coach"
+                ? navigate(`/coach/${user.uid}`)
+                : navigate(`/coachee/${user.uid}`);
+        }
         fetchUserName();
     }, [user, loading, fetchUserName, navigate]);
     return (
