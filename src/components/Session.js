@@ -1,13 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import {
-    Box,
-    Checkbox,
-    VStack,
-    Stack,
-    HStack,
-    Text,
-    Flex,
-} from "@chakra-ui/react";
+import { Box, VStack, HStack, Text } from "@chakra-ui/react";
 import { useDebounce } from "usehooks-ts";
 import { Editor } from "@tinymce/tinymce-react";
 import { getDatabase, ref, set, onValue } from "firebase/database";
@@ -15,26 +7,26 @@ import { useParams } from "react-router-dom";
 import ActionCard from "./ActionCard";
 import ResourceCard from "./ResourceCard";
 
-const SETTINGS = [
-    {
-        title: "Data enabled",
-        subtitle: "Access over Mobile network",
-        isChecked: false,
-    },
-    {
-        title: "Data roaming",
-        subtitle: "Connect to data services",
-    },
-    {
-        title: "Enable always-on mobile data",
-        subtitle: "Use more power on dome mobile networks",
-    },
-    {
-        title: "Use only 6G networks",
-        subtitle: "Saves battery",
-        isChecked: true,
-    },
-];
+// const SETTINGS = [
+//     {
+//         title: "Data enabled",
+//         subtitle: "Access over Mobile network",
+//         isChecked: false,
+//     },
+//     {
+//         title: "Data roaming",
+//         subtitle: "Connect to data services",
+//     },
+//     {
+//         title: "Enable always-on mobile data",
+//         subtitle: "Use more power on dome mobile networks",
+//     },
+//     {
+//         title: "Use only 6G networks",
+//         subtitle: "Saves battery",
+//         isChecked: true,
+//     },
+// ];
 
 function Session() {
     const [notes, setNotes] = useState("");

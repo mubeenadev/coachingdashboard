@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { smoothClasses } from "./classes";
 import {
-    Box,
     Checkbox,
     VStack,
     Stack,
@@ -11,7 +10,7 @@ import {
     Input,
     Button,
 } from "@chakra-ui/react";
-import CardConatainer from "./Card/CardContainer";
+import CardContainer from "./Card/CardContainer";
 
 const ActionCard = (props) => {
     const [newItem, setNewItem] = useState({
@@ -44,12 +43,12 @@ const ActionCard = (props) => {
     };
 
     return (
-        <CardConatainer title={props.title}>
+        <CardContainer title={props.title}>
             <VStack>
                 <div
                     style={{
                         width: "100%",
-                        maxHeight: "200px", // Set the maximum height for scrollability
+                        height: "200px", // Set the maximum height for scrollability
                         overflowY: "auto", // Enable vertical scrolling
                     }}
                     ref={scrollContainerRef}
@@ -110,7 +109,7 @@ const ActionCard = (props) => {
                     </Button>
                 </HStack>
             </VStack>
-        </CardConatainer>
+        </CardContainer>
     );
 };
 
