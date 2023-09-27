@@ -1,7 +1,7 @@
 import React from "react";
 import { Stack, Text } from "@chakra-ui/react";
 
-function CardConatainer(props) {
+function CardContainer(props) {
     const { variant, children, ...rest } = props;
 
     return (
@@ -30,4 +30,4 @@ function CardConatainer(props) {
     );
 }
 
-export default CardConatainer;
+export default CardContainer;
