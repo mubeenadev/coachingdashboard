@@ -1,6 +1,6 @@
 import React from "react";
-import { ChakraProvider, Flex, theme, Box, Button } from "@chakra-ui/react";
-import { ColorModeSwitcher } from "./ColorModeSwitcher";
+import { ChakraProvider, theme } from "@chakra-ui/react";
+//import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home";
 import LoginPage from "./Pages/LoginPage";
@@ -9,13 +9,12 @@ import ResetPassword from "./Pages/ResetPassword";
 import CoachHomePage from "./Pages/CoachHomePage";
 import CoacheeHomePage from "./Pages/CoacheeHomePage";
 import Session from "./components/Session";
-import { logout } from "./components/Firebase";
+import NavBar from "./components/NavBar";
 
 function App() {
     return (
         <ChakraProvider theme={theme}>
-            <div>
-                <Button onClick={logout}>Signout</Button>
+            <NavBar>
                 <Router>
                     <Routes>
                         <Route exact path="/" element={<Home />} />
@@ -39,7 +38,7 @@ function App() {
                         <Route exact path="session/:id" element={<Session />} />
                     </Routes>
                 </Router>
-            </div>
+            </NavBar>
         </ChakraProvider>
     );
 }
