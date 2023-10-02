@@ -21,6 +21,7 @@ import {
     where,
     addDoc,
 } from "firebase/firestore";
+import { Navigate } from "react-router-dom";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -44,8 +45,19 @@ const googleProvider = new GoogleAuthProvider();
 const signInWithGoogle = async () => {
     console.log("here");
     try {
+        googleProvider.addScope(
+            "https://www.googleapis.com/auth/calendar.readonly"
+        );
         const res = await signInWithPopup(auth, googleProvider);
         const user = res.user;
+
+        // await window.gapi.client.init({
+        //     apiKey: firebaseConfig.apiKey,
+        //     clientId:
+        //         "893730550227-0fi6ei52m5ku35jpago9thn2ed1936c8.apps.googleusercontent.com",
+        //     scope: "https://www.googleapis.com/auth/calendar.readonly",
+        // });
+
         const q = query(collection(db, "users"), where("uid", "==", user.uid));
         const docs = await getDocs(q);
         if (docs.docs.length === 0) {
@@ -104,8 +116,8 @@ const sendPasswordReset = async (email) => {
     }
 };
 
-const logout = () => {
-    signOut(auth);
+const logout = async () => {
+    return signOut(auth);
 };
 
 export {

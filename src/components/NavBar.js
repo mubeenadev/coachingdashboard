@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
     Box,
     Flex,
@@ -7,13 +8,18 @@ import {
     useDisclosure,
     useColorModeValue,
     Stack,
+    Center,
+    Spinner,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon, AddIcon } from "@chakra-ui/icons";
 import { logout } from "./Firebase";
+import { useNavigate } from "react-router-dom";
+
 const Links = ["Dashboard", "Projects", "Team"];
 
 const NavLink = (props) => {
     const { children } = props;
+
     return (
         <Box
             as="a"
@@ -32,8 +38,16 @@ const NavLink = (props) => {
 };
 
 export default function NavBar(props) {
-    const { children } = props;
+    const { children, isLoggedIn } = props;
+    const [loading, setLoading] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const navigate = useNavigate(); // Hook to perform navigation
+
+    const handleLogout = async () => {
+        await logout(); // Logout function from Firebase
+        console.log("here in navbar");
+        navigate("/"); // Navigate back to the home page
+    };
 
     return (
         <>
@@ -63,15 +77,25 @@ export default function NavBar(props) {
                         </HStack>
                     </HStack>
                     <Flex alignItems={"center"}>
-                        <Button
-                            variant={"solid"}
-                            colorScheme={"teal"}
-                            size={"sm"}
-                            mr={4}
-                            onClick={logout}
-                        >
-                            Signout
-                        </Button>
+                        {isLoggedIn ? (
+                            <Button
+                                variant={"solid"}
+                                colorScheme={"teal"}
+                                size={"sm"}
+                                mr={4}
+                                onClick={handleLogout}
+                            >
+                                Signout
+                            </Button>
+                        ) : (
+                            <Center>
+                                {loading ? (
+                                    <Spinner size="sm" />
+                                ) : (
+                                    <NavLink href="/login">Login</NavLink>
+                                )}
+                            </Center>
+                        )}
                     </Flex>
                 </Flex>
 
