@@ -10,8 +10,15 @@ function Home() {
     const [name, setName] = useState("");
     const [userType, setUserType] = useState("");
     const navigate = useNavigate();
-    const fetchUserName = useCallback(async () => {
+
+    const fetchUserData = useCallback(async () => {
         try {
+            if (!user) {
+                console.log("herllo insinde condition ");
+                navigate("/login");
+                return;
+            }
+
             const q = query(
                 collection(db, "users"),
                 where("uid", "==", user?.uid)
@@ -20,21 +27,28 @@ function Home() {
             const data = doc.docs[0].data();
             setName(data.name);
             setUserType(data.userType);
+
+            console.log("user is ", user);
+            // Redirect based on user role
+            if (data.userType === "coach") {
+                navigate(`/coach/${user.uid}`);
+            } else if (data.userType === "coachee") {
+                navigate(`/coachee/${user.uid}`);
+            } else {
+                // Handle unknown user types here
+                console.error("Unknown user type:", data.userType);
+            }
         } catch (err) {
             console.error(err);
-            alert("An error occured while fetching user data");
+            alert("An error occurred while fetching user data");
         }
-    }, [user]);
+    }, [user, navigate]);
+
     useEffect(() => {
         if (loading) return;
-        if (!user) return navigate("/");
-        else {
-            userType === "coach"
-                ? navigate(`/coach/${user.uid}`)
-                : navigate(`/coachee/${user.uid}`);
-        }
-        fetchUserName();
-    }, [user, loading, fetchUserName, navigate]);
+        fetchUserData();
+    }, [user, loading, fetchUserData]);
+
     return (
         <Box>
             <Box>
