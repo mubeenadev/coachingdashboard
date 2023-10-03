@@ -4,29 +4,30 @@ import { useDebounce } from "usehooks-ts";
 import { Editor } from "@tinymce/tinymce-react";
 import { getDatabase, ref, set, onValue } from "firebase/database";
 import { useParams } from "react-router-dom";
-import ActionCard from "./ActionCard";
-import ResourceCard from "./ResourceCard";
-
-// const SETTINGS = [
-//     {
-//         title: "Data enabled",
-//         subtitle: "Access over Mobile network",
-//         isChecked: false,
-//     },
-//     {
-//         title: "Data roaming",
-//         subtitle: "Connect to data services",
-//     },
-//     {
-//         title: "Enable always-on mobile data",
-//         subtitle: "Use more power on dome mobile networks",
-//     },
-//     {
-//         title: "Use only 6G networks",
-//         subtitle: "Saves battery",
-//         isChecked: true,
-//     },
-// ];
+import ActionCard from "./Card/Action/ActionCard";
+import ResourceCard from "./Card/Resource/ResourceCard";
+const resourcesData = [
+    {
+        title: "Secret of success",
+        category: "presentation",
+        link: "#",
+    },
+    {
+        title: "Avoid mistakes in cv",
+        category: "coverletter",
+        link: " ",
+    },
+    {
+        title: "Better talk April, 05, 2020",
+        category: "communication",
+        link: "#",
+    },
+    {
+        title: "June, 25, 2019",
+        category: "#QW-103578",
+        link: "#",
+    },
+];
 
 function Session() {
     const [notes, setNotes] = useState("");
@@ -96,7 +97,7 @@ function Session() {
                         title="Action Items"
                         onChange={handleChange}
                     />
-                    <ResourceCard></ResourceCard>
+                    <ResourceCard data={resourcesData}></ResourceCard>
                 </VStack>
                 <Box
                     spacing={2}
@@ -109,7 +110,7 @@ function Session() {
                     minH={700}
                     maxH={700}
                     borderRadius={24}
-                    boxShadow="0px 8px 16px rgba(58, 58, 68, 0.12), 0px 16px 32px rgba(90, 91, 106, 0.12);"
+                    borderColor="#CBD5E0"
                 >
                     <div style={{ width: "100%", height: "100%" }}>
                         <Editor
