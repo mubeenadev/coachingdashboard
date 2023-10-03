@@ -12,7 +12,7 @@ import {
     Spinner,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon, AddIcon } from "@chakra-ui/icons";
-import { logout } from "./Firebase";
+import { logout } from "../Config/Firebase";
 import { useNavigate } from "react-router-dom";
 
 const Links = ["Dashboard", "Projects", "Team"];
@@ -38,7 +38,7 @@ const NavLink = (props) => {
 };
 
 export default function NavBar(props) {
-    const { children, isLoggedIn } = props;
+    const { isLoggedIn } = props;
     const [loading, setLoading] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const navigate = useNavigate(); // Hook to perform navigation
@@ -109,8 +109,6 @@ export default function NavBar(props) {
                     </Box>
                 ) : null}
             </Box>
-
-            <Box p={4}>{children}</Box>
         </>
     );
 }

@@ -5,7 +5,7 @@ import {
     auth,
     registerWithEmailAndPassword,
     signInWithGoogle,
-} from "./Firebase.js";
+} from "../Config/Firebase.js";
 
 import {
     Box,
@@ -23,8 +23,8 @@ import {
     Radio,
     RadioGroup,
 } from "@chakra-ui/react";
-import { OAuthButtonGroup } from "./OAuthButtonGroup";
-import { PasswordField } from "./PasswordField";
+import { OAuthButtonGroup } from "../Utils/OAuthButtonGroup.js";
+import { PasswordField } from "../Utils/PasswordField.jsx";
 
 function Register() {
     const [email, setEmail] = useState("");

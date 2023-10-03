@@ -1,38 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import {
-    auth,
-    logInWithEmailAndPassword,
-    signInWithGoogle,
-} from "../Config/Firebase.js";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
+import { auth, sendPasswordReset } from "../Config/Firebase";
 import {
-    Button,
+    FormControl,
+    FormLabel,
     Input,
     Box,
+    Button,
     Stack,
+    Container,
     Heading,
     Text,
     HStack,
-    Checkbox,
-    Container,
-    FormControl,
-    FormLabel,
-    Divider,
+    Link,
 } from "@chakra-ui/react";
-import { OAuthButtonGroup } from "../Utils/OAuthButtonGroup.js";
-import { PasswordField } from "../Utils/PasswordField.jsx";
 
-function Login() {
+function ResetPassword() {
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [user, loading] = useAuthState(auth);
     const navigate = useNavigate();
     useEffect(() => {
-        if (loading) {
-            // maybe trigger a loading screen
-            return;
-        }
+        if (loading) return;
         if (user) navigate("/");
     }, [user, loading, navigate]);
     return (
@@ -51,7 +40,7 @@ function Login() {
                 <Stack spacing="6">
                     <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
                         <Heading size={{ base: "xs", md: "sm" }}>
-                            Log in to your account
+                            Reset Email
                         </Heading>
                         <Text color="fg.muted">
                             Don't have an account?
@@ -77,41 +66,29 @@ function Login() {
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                             </FormControl>
-                            <PasswordField
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
                         </Stack>
-                        <HStack justify="space-between">
-                            <Checkbox defaultChecked>Remember me</Checkbox>
-                        </HStack>
                         <Stack spacing="6">
                             <Button
                                 onClick={(e) => {
-                                    e.preventDefault();
-                                    logInWithEmailAndPassword(email, password);
+                                    // e.preventDefault();
+                                    sendPasswordReset(email);
                                 }}
                             >
-                                Login
+                                Send password reset email
                             </Button>
-                            <HStack>
-                                <Divider />
-                                <Text
-                                    textStyle="sm"
-                                    whiteSpace="nowrap"
-                                    color="fg.muted"
-                                >
-                                    or continue with
-                                </Text>
-                                <Divider />
-                            </HStack>
-                            <OAuthButtonGroup onClick={signInWithGoogle} />
                         </Stack>
+                        <HStack>
+                            <Stack>
+                                <Box>
+                                    Don't have an account?
+                                    <Link to="/signup">Register</Link> now.
+                                </Box>
+                            </Stack>
+                        </HStack>
                     </Stack>
                 </Box>
             </Stack>
         </Container>
     );
 }
-
-export default Login;
+export default ResetPassword;

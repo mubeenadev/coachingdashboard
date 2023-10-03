@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
-import { auth, db, logout } from "../components/Firebase";
+import { auth, db, logout } from "../Config/Firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 import { Box, Button } from "@chakra-ui/react";
 
