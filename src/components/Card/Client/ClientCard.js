@@ -1,6 +1,6 @@
 import React from "react";
 import CardContainer from "../CardContainer";
-import { VStack } from "@chakra-ui/react";
+import { VStack, Box } from "@chakra-ui/react";
 import {
     Text,
     Flex,
@@ -33,14 +33,34 @@ const Client = [
         coach_category: "Career change",
         type: "AVG",
     },
+    {
+        name: "Sally",
+        coach_category: "Job",
+        type: "AVG",
+    },
+    {
+        name: "Mika",
+        coach_category: "Business",
+        type: "Private",
+    },
+    {
+        name: "Blippi",
+        coach_category: "Job",
+        type: "AVG",
+    },
+    {
+        name: "Jolly",
+        coach_category: "Career change",
+        type: "AVG",
+    },
 ];
 
 const ClientCard = () => {
     const data = Client;
     return (
         <CardContainer title="Clients">
-            <VStack width={"100%"}>
-                <div
+            <VStack width={"100%"} p={5} maxHeight={300}>
+                <Box
                     style={{
                         flex: 1,
                         width: "100%",
@@ -51,10 +71,9 @@ const ClientCard = () => {
                     {data.map((row, index) => {
                         return (
                             <Flex
+                                key={index}
                                 width={"100%"}
                                 alignItems="center"
-                                marginBottom={"15px"}
-                                marginEnd={"15px"}
                             >
                                 <Stack>
                                     <Text
@@ -94,7 +113,7 @@ const ClientCard = () => {
                             </Flex>
                         );
                     })}
-                </div>
+                </Box>
             </VStack>
         </CardContainer>
     );
