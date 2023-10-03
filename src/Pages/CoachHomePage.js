@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     Box,
@@ -13,7 +13,7 @@ import {
 import Calendar from "@ericz1803/react-google-calendar";
 import { css } from "@emotion/react";
 import ResourceCard from "../components/Card/Resource/ResourceCard";
-import CardContainer from "../components/Card/CardContainer";
+import { getDatabase, ref, set, onValue } from "firebase/database";
 import ClientCard from "../components/Card/Client/ClientCard";
 import ResourceModal from "../components/Card/Resource/ResourceModal";
 let calendars = [
@@ -37,37 +37,13 @@ let styles = {
     `,
 };
 
-const resourcesData = [
-    {
-        title: "Secret of success",
-        category: "presentation",
-        link: "#",
-    },
-    {
-        title: "Avoid mistakes in cv",
-        category: "coverletter",
-        link: " ",
-    },
-    {
-        title: "Better talk April, 05, 2020",
-        category: "communication",
-        link: "#",
-    },
-    {
-        title: "June, 25, 2019",
-        category: "#QW-103578",
-        link: "#",
-    },
-];
-
 const CoachHomePage = () => {
-    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [formData, setFormData] = useState({
-        title: "",
-        link: "",
-        category: "",
-    });
+    const [resources, setResources] = useState([]);
+
+    const db = getDatabase();
+    const resourcesRef = ref(db, "resources/");
+    const isInitialMount = useRef(true);
 
     const handleModalOpen = () => {
         setIsModalOpen(true);
@@ -76,13 +52,28 @@ const CoachHomePage = () => {
     const handleModalClose = () => {
         setIsModalOpen(false);
     };
+    useEffect(() => {
+        onValue(resourcesRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                const resourcesArray = Object.values(data);
+                setResources(resourcesArray);
+            }
+        });
+    }, []); //listener
 
-    const handleSaveData = (formData) => {
-        setFormData(formData);
-
-        resourcesData.push(formData);
-        console.log("newdata", formData);
+    const handleSaveData = (resource) => {
+        setResources((prevResources) => [...prevResources, resource]);
     };
+
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            // Update the Firebase database with the new list of resources
+            set(resourcesRef, resources);
+        }
+    }, [resources]);
 
     return (
         <Box m={8}>
@@ -98,7 +89,7 @@ const CoachHomePage = () => {
                 <VStack flex="1" spacing={8}>
                     <ClientCard></ClientCard>
 
-                    <ResourceCard data={resourcesData}>
+                    <ResourceCard data={resources}>
                         <Button mt={4} onClick={handleModalOpen}>
                             Add New Resource
                         </Button>

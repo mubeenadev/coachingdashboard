@@ -6,32 +6,11 @@ import { getDatabase, ref, set, onValue } from "firebase/database";
 import { useParams } from "react-router-dom";
 import ActionCard from "./Card/Action/ActionCard";
 import ResourceCard from "./Card/Resource/ResourceCard";
-const resourcesData = [
-    {
-        title: "Secret of success",
-        category: "presentation",
-        link: "#",
-    },
-    {
-        title: "Avoid mistakes in cv",
-        category: "coverletter",
-        link: " ",
-    },
-    {
-        title: "Better talk April, 05, 2020",
-        category: "communication",
-        link: "#",
-    },
-    {
-        title: "June, 25, 2019",
-        category: "#QW-103578",
-        link: "#",
-    },
-];
 
 function Session() {
     const [notes, setNotes] = useState("");
     const [action, setActions] = useState([]);
+    const [resource, setResource] = useState([]);
     const debouncedNotes = useDebounce(notes, 500);
     const editorRef = useRef(null);
     const db = getDatabase();
@@ -40,6 +19,7 @@ function Session() {
 
     const actionRef = ref(db, "sessions/" + id + "/actionItems");
     const noteRef = ref(db, "sessions/" + id + "/notes");
+    const resourceRef = ref(db, "resources/");
 
     useEffect(() => {
         onValue(noteRef, (snapshot) => {
@@ -52,6 +32,12 @@ function Session() {
             const data = snapshot.val();
             if (data && data !== action) {
                 setActions(data);
+            }
+        });
+        onValue(resourceRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data && data !== resource) {
+                setResource(data);
             }
         });
     }, []);
@@ -75,7 +61,7 @@ function Session() {
     };
 
     return (
-        <Box padding={10}>
+        <Box margin={8}>
             <Text
                 fontSize="2xl"
                 fontWeight={700}
@@ -87,26 +73,25 @@ function Session() {
             </Text>
 
             <HStack
-                mt={10}
+                spacing={8}
                 justifyContent="space-between"
                 alignItems="flex-start"
             >
-                <VStack spacing={10}>
+                <VStack spacing={8} flex={1}>
                     <ActionCard
                         data={action}
                         title="Action Items"
                         onChange={handleChange}
                     />
-                    <ResourceCard data={resourcesData}></ResourceCard>
+                    <ResourceCard data={resource}></ResourceCard>
                 </VStack>
                 <Box
                     spacing={2}
-                    ml={10}
+                    ml={0}
                     justifyContent="center"
                     alignItems="center"
                     bg="white"
                     flex={1}
-                    p={3}
                     minH={700}
                     maxH={700}
                     borderRadius={24}

@@ -1,33 +1,31 @@
 import React from "react";
 import CardContainer from "../CardContainer";
-import { VStack } from "@chakra-ui/react";
+import { VStack, Box } from "@chakra-ui/react";
 import ResourcesRow from "./ResourcesRow";
-import ResourceModal from "./ResourceModal";
 
-const ResourceCard = (props) => {
-    const { children, data } = props;
-
+const ResourceCard = ({ children, data }) => {
     return (
         <CardContainer title="Resource">
-            <VStack>
-                <div
-                    style={{
-                        width: "100%",
-                        height: "200px", // Set the maximum height for scrollability
-                        overflowY: "auto", // Enable vertical scrolling
-                    }}
+            <VStack width="100%" padding={5} maxHeight={300} minH={300}>
+                <Box
+                    width="100%"
+                    maxHeight="200px"
+                    overflowY="auto"
+                    marginBottom={4}
                 >
-                    {data.map((row, index) => {
-                        return (
+                    {data && data.length > 0 ? (
+                        data.map((row, index) => (
                             <ResourcesRow
                                 key={index}
                                 title={row.title}
                                 category={row.category}
                                 link={row.link}
                             />
-                        );
-                    })}
-                </div>
+                        ))
+                    ) : (
+                        <p>No resources available</p>
+                    )}
+                </Box>
                 {children}
             </VStack>
         </CardContainer>

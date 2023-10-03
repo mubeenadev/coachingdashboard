@@ -1,9 +1,7 @@
 import React from "react";
 import { Text, Flex, Spacer, Button, Icon, Link } from "@chakra-ui/react";
 import { FaExternalLinkAlt } from "react-icons/fa";
-const ResourcesRow = (props) => {
-    const { title, category, link } = props;
-
+const ResourcesRow = ({ title, category, link }) => {
     return (
         <Flex
             width={"100%"}
