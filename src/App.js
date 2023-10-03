@@ -11,7 +11,7 @@ import CoacheeHomePage from "./Pages/CoacheeHomePage";
 import Session from "./components/Session";
 import NavBar from "./components/NavBar";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "./components/Firebase";
+import { auth } from "./Config/Firebase";
 
 function App() {
     const [user, loading] = useAuthState(auth);
