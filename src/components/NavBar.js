@@ -10,10 +10,12 @@ import {
     Stack,
     Center,
     Spinner,
+    Image,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon, AddIcon } from "@chakra-ui/icons";
 import { logout } from "../Config/Firebase";
 import { useNavigate } from "react-router-dom";
+import logo from "../Assets/png/logo-no-background.png";
 
 const Links = ["Dashboard", "Projects", "Team"];
 
@@ -65,16 +67,14 @@ export default function NavBar(props) {
                         onClick={isOpen ? onClose : onOpen}
                     />
                     <HStack spacing={8} alignItems={"center"}>
-                        <Box>Logo</Box>
+                        <Box>
+                            <Image src={logo} alt="Logo" height={5} />
+                        </Box>
                         <HStack
                             as={"nav"}
                             spacing={4}
                             display={{ base: "none", md: "flex" }}
-                        >
-                            {Links.map((link) => (
-                                <NavLink key={link}>{link}</NavLink>
-                            ))}
-                        </HStack>
+                        ></HStack>
                     </HStack>
                     <Flex alignItems={"center"}>
                         {isLoggedIn ? (
