@@ -1,62 +1,36 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import {
     Box,
     Button,
-    Flex,
     Link,
     Stack,
     VStack,
     HStack,
-    Center,
-    Text,
 } from "@chakra-ui/react";
-import Calendar from "@ericz1803/react-google-calendar";
-import { css } from "@emotion/react";
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import ResourceCard from "../components/Card/Resource/ResourceCard";
 import { getDatabase, ref, set, onValue } from "firebase/database";
 import ClientCard from "../components/Card/Client/ClientCard";
 import ResourceModal from "../components/Card/Resource/ResourceModal";
 import { auth } from "../Config/Firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
+import timeGridPlugin from '@fullcalendar/timegrid'
 
 import {
     getFirestore,
-    query,
-    getDocs,
     getDoc,
     doc,
-    where,
-    addDoc,
-    setDoc,
 } from "firebase/firestore";
-
-let calendars = [
-    {
-        calendarId:
-            "424f279cfa2fe07aa9bd4114fc2209a59cceb1f6c6a25c58e0a06e9771bc99ca@group.calendar.google.com",
-    },
-];
-
-let styles = {
-    calendar: {
-        borderWidth: "2px",
-        borderRadius: "20px",
-        borderColor: "#CBD5E0",
-        width: "100%", //make outer edge of calendar thicker
-    },
-    today: css`
-        /* highlight today by making the text red and giving it a red border */
-        color: red;
-        border: 1px solid red;
-    `,
-};
 
 const CoachHomePage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [resources, setResources] = useState([]);
     const [user, loading] = useAuthState(auth);
     const [hasCalendarConsent, setCalendarConsent] = useState(false)
+    const [calendarEvents, setCalendarEvents] = useState([])
+    const [calendarStart, setCalendarStart] = useState()
+    const [calendarEnd, setCalendarEnd] = useState()
 
     const db = getDatabase();
     const firestore = getFirestore();
@@ -79,8 +53,17 @@ const CoachHomePage = () => {
                 setCalendarConsent(!!snapshot.data().hasConsent)
             });
         }
-
     }, [user])
+
+    useEffect(() => {
+        if(hasCalendarConsent && calendarStart && calendarEnd) {
+            fetch(`https://us-central1-coachconnect-400506.cloudfunctions.net/calendar-event-listener/calendar-events?userId=${user.uid}&start=${calendarStart}&end=${calendarEnd}`)
+            .then(res => res.json())
+            .then(res => {
+                setCalendarEvents(res)
+            })
+        }
+    }, [hasCalendarConsent, calendarStart, calendarEnd])
 
     useEffect(() => {
         onValue(resourcesRef, (snapshot) => {
@@ -90,7 +73,7 @@ const CoachHomePage = () => {
                 setResources(resourcesArray);
             }
         });
-    }, []); //listener
+    }, []);
 
     const handleSaveData = (resource) => {
         setResources((prevResources) => [...prevResources, resource]);
@@ -109,16 +92,25 @@ const CoachHomePage = () => {
         <Box m={8}>
             <HStack mt={8} spacing={8} alignItems="baseline">
                 {hasCalendarConsent ? (<Stack flex="2">
-                    <Calendar
-                        apiKey={process.env.REACT_APP_CALENDAR_API_KEY}
-                        calendars={calendars}
-                        styles={styles}
-                    />
+                <FullCalendar
+                    plugins={[timeGridPlugin]}
+                    initialView="timeGridWeek"
+                    datesSet={({ start, end }) => { 
+                        setCalendarStart(start.toISOString())
+                        setCalendarEnd(end.toISOString())
+                    }}
+                    events={
+                        calendarEvents.map(event => ({
+                            id: event.id,
+                            title: event.summary,
+                            start: event.start.dateTime,
+                            end: event.end.dateTime,
+                        }))
+                    }
+                />
                 </Stack>) : (<Button>
                     <Link href="https://us-central1-coachconnect-400506.cloudfunctions.net/calendar-event-listener/auth/google">
-                        <a className="w-full p-2">
                         Authorize Google Calendar
-                        </a>
                     </Link>
                 </Button>)}
 

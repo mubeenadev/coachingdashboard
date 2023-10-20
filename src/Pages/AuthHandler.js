@@ -5,10 +5,9 @@ import { auth } from "../Config/Firebase";
 import { Box } from "@chakra-ui/react";
 import { useSearchParams } from "react-router-dom";
 
-
 function AuthHandler() {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [user, loading] = useAuthState(auth);
+    const [searchParams] = useSearchParams();
+    const [user] = useAuthState(auth);
     const navigate = useNavigate();
     useEffect(() => {
         if(user) {
