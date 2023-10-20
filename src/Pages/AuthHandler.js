@@ -14,6 +14,10 @@ function AuthHandler() {
         if(user) {
             console.log(searchParams)
             console.log(user)
+            fetch('https://us-central1-coachconnect-400506.cloudfunctions.net/calendar-event-listener/configure-calendar')
+            .then(res => {
+                console.log(res)
+            })
         }
         
     }, [user]);
