@@ -17,6 +17,20 @@ import ResourceCard from "../components/Card/Resource/ResourceCard";
 import { getDatabase, ref, set, onValue } from "firebase/database";
 import ClientCard from "../components/Card/Client/ClientCard";
 import ResourceModal from "../components/Card/Resource/ResourceModal";
+import { auth } from "../Config/Firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+
+import {
+    getFirestore,
+    query,
+    getDocs,
+    getDoc,
+    doc,
+    where,
+    addDoc,
+    setDoc,
+} from "firebase/firestore";
+
 let calendars = [
     {
         calendarId:
@@ -41,8 +55,12 @@ let styles = {
 const CoachHomePage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [resources, setResources] = useState([]);
+    const [user, loading] = useAuthState(auth);
+    const [hasCalendarConsent, setCalendarConsent] = useState(false)
 
     const db = getDatabase();
+    const firestore = getFirestore();
+
     const resourcesRef = ref(db, "resources/");
     const isInitialMount = useRef(true);
 
@@ -53,6 +71,17 @@ const CoachHomePage = () => {
     const handleModalClose = () => {
         setIsModalOpen(false);
     };
+
+    useEffect(() => {
+        if(user) {
+            const docRef = doc(firestore, "users", user.uid);
+            getDoc(docRef).then(snapshot => {
+                setCalendarConsent(!!snapshot.data().hasConsent)
+            });
+        }
+
+    }, [user])
+
     useEffect(() => {
         onValue(resourcesRef, (snapshot) => {
             const data = snapshot.val();
@@ -79,20 +108,19 @@ const CoachHomePage = () => {
     return (
         <Box m={8}>
             <HStack mt={8} spacing={8} alignItems="baseline">
-                <Button>
-                    <Link href="https://us-central1-coachconnect-400506.cloudfunctions.net/calendar-event-listener/auth/google">
-                        <a className="w-full p-2">
-                        Authorize Google Calendar
-                        </a>
-                    </Link>
-                </Button>
-                <Stack flex="2">
+                {hasCalendarConsent ? (<Stack flex="2">
                     <Calendar
                         apiKey={process.env.REACT_APP_CALENDAR_API_KEY}
                         calendars={calendars}
                         styles={styles}
                     />
-                </Stack>
+                </Stack>) : (<Button>
+                    <Link href="https://us-central1-coachconnect-400506.cloudfunctions.net/calendar-event-listener/auth/google">
+                        <a className="w-full p-2">
+                        Authorize Google Calendar
+                        </a>
+                    </Link>
+                </Button>)}
 
                 <VStack flex="1" spacing={8}>
                     <ClientCard></ClientCard>

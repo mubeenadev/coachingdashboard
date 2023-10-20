@@ -19,8 +19,10 @@ import {
     query,
     getDocs,
     collection,
+    doc,
     where,
     addDoc,
+    setDoc,
 } from "firebase/firestore";
 import { Navigate } from "react-router-dom";
 // Your web app's Firebase configuration
@@ -94,7 +96,7 @@ const registerWithEmailAndPassword = async (
     try {
         const res = await createUserWithEmailAndPassword(auth, email, password);
         const user = res.user;
-        await addDoc(collection(db, "users"), {
+        await setDoc(doc(db, "users", user.uid), {
             uid: user.uid,
             name,
             authProvider: "local",

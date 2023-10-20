@@ -13,6 +13,7 @@ import Session from "./components/Session";
 import NavBar from "./components/NavBar";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./Config/Firebase";
+import AuthHandler from "./Pages/AuthHandler";
 
 function App() {
     const [user, loading] = useAuthState(auth);
@@ -28,6 +29,7 @@ function App() {
                 <Routes>
                     <Route exact path="/" element={<Home />} />
                     <Route exact path="/login" element={<LoginPage />} />
+                    <Route exact path="/auth/google/callback" element={<AuthHandler />} />
                     <Route exact path="/signup" element={<SignUpPage />} />
                     <Route exact path="/survey" element={<Survey />} />
                     <Route
