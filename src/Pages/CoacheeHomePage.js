@@ -1,44 +1,23 @@
 import React, { useEffect, useState } from "react";
 import FileUpload from "../Utils/FileUpload";
-import {
-    Box,
-    Text,
-    Divider,
-    Link,
-    Button,
-    Stack,
-    VStack,
-} from "@chakra-ui/react";
+import { Box, Text, Button, Stack, VStack } from "@chakra-ui/react";
 import { auth } from "../Config/Firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import {
-    getDatabase,
-    set,
-    ref as dataRef,
-    child,
-    get,
-} from "firebase/database";
+import { getUserDocumentList } from "../Utils/userDocument";
 
 function CoacheeHomePage() {
-    const [documents, setDocuments] = useState([]);
-    const db = getDatabase();
     const [user, loading] = useAuthState(auth);
+    const [documents, setDocuments] = useState([]);
 
-    const documentRef = dataRef(db, "userdocuments/");
+    const getDocs = async () => {
+        if (user) {
+            const data = await getUserDocumentList(user);
+            setDocuments(data);
+        }
+    };
 
     useEffect(() => {
-        if (user)
-            get(child(documentRef, `${user.uid}/documents`))
-                .then((snapshot) => {
-                    if (snapshot.exists()) {
-                        setDocuments(snapshot.val());
-                    } else {
-                        console.log("No data available");
-                    }
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+        getDocs();
     }, [user]);
 
     return (

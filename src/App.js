@@ -8,6 +8,7 @@ import SignUpPage from "./Pages/SignUpPage";
 import ResetPassword from "./Pages/ResetPassword";
 import CoachHomePage from "./Pages/CoachHomePage";
 import CoacheeHomePage from "./Pages/CoacheeHomePage";
+import Survey from "./Pages/Survey";
 import Session from "./components/Session";
 import NavBar from "./components/NavBar";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -28,6 +29,7 @@ function App() {
                     <Route exact path="/" element={<Home />} />
                     <Route exact path="/login" element={<LoginPage />} />
                     <Route exact path="/signup" element={<SignUpPage />} />
+                    <Route exact path="/survey" element={<Survey />} />
                     <Route
                         exact
                         path="/reset-password"

@@ -18,7 +18,7 @@ describe("Test", () => {
     });
     test("renders learn react link", () => {
         render(<App />);
-        const linkElement = screen.getByText(/learn chakra/i);
+        const linkElement = screen.getByText(i);
         expect(linkElement).toBeInTheDocument();
     });
 });

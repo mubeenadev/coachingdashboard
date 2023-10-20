@@ -6,8 +6,6 @@ import {
     Button,
     HStack,
     Input,
-    Text,
-    Box,
     CircularProgress,
     InputGroup,
     InputLeftElement,
@@ -17,6 +15,7 @@ import { FaUpload } from "react-icons/fa";
 import { auth } from "../Config/Firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getDatabase, set, ref as dataRef, onValue } from "firebase/database";
+import { addUserDocument } from "./userDocument";
 
 function FileUpload() {
     // State to store selected file
@@ -32,7 +31,8 @@ function FileUpload() {
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
-            set(documentRef, document);
+            // set(documentRef, document);
+            console.log("document", document);
         }
     }, [document]);
 
@@ -86,15 +86,8 @@ function FileUpload() {
                             filename: file.name,
                             url: downloadURL,
                         };
-                        setDocument((prevData) => ({
-                            ...prevData,
-                            [user.uid]: {
-                                documents: [
-                                    ...(prevData[user.uid]?.documents || []),
-                                    newDocument,
-                                ],
-                            },
-                        }));
+                        addUserDocument(user, newDocument);
+
                         console.log(
                             "File uploaded successfully. Download URL:",
                             downloadURL
@@ -161,17 +154,11 @@ function FileUpload() {
             >
                 Upload to Firebase
             </Button>
-            {/* <Box>
-                {percent >= 0 && percent <= 100 ? (
-                    <Text fontWeight="bold">{percent}% uploaded</Text>
-                ) : (
-                    <Text color="red.500">Invalid progress value</Text>
-                )}
-            </Box> */}
+
             {uploading && (
                 <CircularProgress
                     value={percent}
-                    size="100px"
+                    size="50px"
                     thickness={10}
                     color="teal"
                 />

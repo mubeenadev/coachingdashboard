@@ -68,7 +68,12 @@ export default function NavBar(props) {
                     />
                     <HStack spacing={8} alignItems={"center"}>
                         <Box>
-                            <Image src={logo} alt="Logo" height={5} />
+                            <Image
+                                src={logo}
+                                alt="Logo"
+                                height={5}
+                                onClick={() => navigate("/")}
+                            />
                         </Box>
                         <HStack
                             as={"nav"}
