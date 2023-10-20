@@ -4,6 +4,7 @@ import {
     Box,
     Button,
     Flex,
+    Link,
     Stack,
     VStack,
     HStack,
@@ -78,6 +79,13 @@ const CoachHomePage = () => {
     return (
         <Box m={8}>
             <HStack mt={8} spacing={8} alignItems="baseline">
+                <Button>
+                    <Link href="https://us-central1-coachconnect-400506.cloudfunctions.net/calendar-event-listener/auth/google">
+                        <a className="w-full p-2">
+                        Authorize Google Calendar
+                        </a>
+                    </Link>
+                </Button>
                 <Stack flex="2">
                     <Calendar
                         apiKey={process.env.REACT_APP_CALENDAR_API_KEY}
