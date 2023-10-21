@@ -119,8 +119,7 @@ const CoachHomePage = () => {
                 </Button>)}
 
                 <VStack flex="1" spacing={8}>
-                    <ClientCard></ClientCard>
-
+                    <ClientCard />
                     <ResourceCard data={resources}>
                         <Button mt={4} onClick={handleModalOpen}>
                             Add New Resource

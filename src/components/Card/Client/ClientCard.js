@@ -1,16 +1,18 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import CardContainer from "../CardContainer";
 import { VStack, Box } from "@chakra-ui/react";
-import { Text, Flex, Spacer, Button, Link } from "@chakra-ui/react";
+import { Text, Flex, Spacer, Button } from "@chakra-ui/react";
 import ClientModal from "./ClientModal";
 import { query, collection, getDocs, where, addDoc } from "firebase/firestore";
 import { auth, db } from "../../../Config/Firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
 
 const ClientCard = () => {
     const [clientList, setClientList] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [user, loading] = useAuthState(auth);
+    const navigate = useNavigate();
 
     //fetch the client list
     const Fetchdata = async () => {
@@ -118,23 +120,24 @@ const ClientCard = () => {
                                         </Text>
                                     </Flex>
                                     <Spacer />
-                                    <Link href="#" isExternal>
-                                        <Button
-                                            p="0px"
-                                            bg="transparent"
-                                            variant="no-hover"
-                                        >
-                                            <Flex alignItems="center" p="12px">
-                                                <Text
-                                                    fontSize="md"
-                                                    color={"gray.700"}
-                                                    fontWeight="bold"
-                                                >
-                                                    Open
-                                                </Text>
-                                            </Flex>
-                                        </Button>
-                                    </Link>
+                                    <Button
+                                        p="0px"
+                                        bg="transparent"
+                                        variant="no-hover"
+                                        onClick={() => {
+                                            navigate(`/coachee/${row.id}/profile`)
+                                        }}
+                                    >
+                                        <Flex alignItems="center" p="12px">
+                                            <Text
+                                                fontSize="md"
+                                                color={"gray.700"}
+                                                fontWeight="bold"
+                                            >
+                                                Open
+                                            </Text>
+                                        </Flex>
+                                    </Button>
                                 </Flex>
                             );
                         })}
