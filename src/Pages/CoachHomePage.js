@@ -8,14 +8,14 @@ import {
     HStack,
 } from "@chakra-ui/react";
 import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+import timeGridPlugin from '@fullcalendar/timegrid'
 import ResourceCard from "../components/Card/Resource/ResourceCard";
 import { getDatabase, ref, set, onValue } from "firebase/database";
 import ClientCard from "../components/Card/Client/ClientCard";
 import ResourceModal from "../components/Card/Resource/ResourceModal";
 import { auth } from "../Config/Firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import timeGridPlugin from '@fullcalendar/timegrid'
+import { useNavigate } from "react-router-dom";
 
 import {
     getFirestore,
@@ -31,6 +31,7 @@ const CoachHomePage = () => {
     const [calendarEvents, setCalendarEvents] = useState([])
     const [calendarStart, setCalendarStart] = useState()
     const [calendarEnd, setCalendarEnd] = useState()
+    const navigate = useNavigate();
 
     const db = getDatabase();
     const firestore = getFirestore();
@@ -107,8 +108,11 @@ const CoachHomePage = () => {
                             end: event.end.dateTime,
                         }))
                     }
+                    eventClick={({ event }) => {
+                        navigate(`/session/${event.id}`)
+                    }}
                 />
-                </Stack>) : (<Button>
+                </Stack>) : (<Button colorScheme="teal">
                     <Link href="https://us-central1-coachconnect-400506.cloudfunctions.net/calendar-event-listener/auth/google">
                         Authorize Google Calendar
                     </Link>

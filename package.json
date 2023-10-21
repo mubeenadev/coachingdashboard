@@ -27,6 +27,7 @@
     "@ericz1803/react-google-calendar": "^4.3.1",
     "@fullcalendar/core": "^6.1.9",
     "@fullcalendar/daygrid": "^6.1.9",
+    "@fullcalendar/interaction": "^6.1.9",
     "@fullcalendar/react": "^6.1.9",
     "@fullcalendar/timegrid": "^6.1.9",
     "@stfy/react-editor.js": "^1.0.3",

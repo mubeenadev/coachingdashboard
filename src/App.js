@@ -14,6 +14,7 @@ import NavBar from "./components/NavBar";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./Config/Firebase";
 import AuthHandler from "./Pages/AuthHandler";
+import Profile from "./Pages/Profile";
 
 function App() {
     const [user, loading] = useAuthState(auth);
@@ -46,6 +47,11 @@ function App() {
                         exact
                         path="/coachee/:id"
                         element={<CoacheeHomePage />}
+                    />
+                    <Route
+                        exact
+                        path="/coachee/:id/profile"
+                        element={<Profile />}
                     />
                     <Route exact path="session/:id" element={<Session />} />
                 </Routes>
