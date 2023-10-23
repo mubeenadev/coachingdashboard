@@ -125,7 +125,9 @@ const ClientCard = () => {
                                         bg="transparent"
                                         variant="no-hover"
                                         onClick={() => {
-                                            navigate(`/coachee/${row.id}/profile`)
+                                            navigate(
+                                                `/coachee/${row.uid}/profile`
+                                            );
                                         }}
                                     >
                                         <Flex alignItems="center" p="12px">
