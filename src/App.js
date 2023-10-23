@@ -90,9 +90,7 @@ function App() {
                     <Route
                         exact
                         path="/coachee/:id/profile"
-                        element={
-                            <Profile userName={userName} userType={userType} />
-                        }
+                        element={<Profile userType={userType} />}
                     />
                     <Route exact path="session/:id" element={<Session />} />
                 </Routes>

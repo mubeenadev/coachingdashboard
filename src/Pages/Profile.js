@@ -1,22 +1,32 @@
 import React, { useEffect, useState } from "react";
 import FileUpload from "../Utils/FileUpload";
 import { Box, Text, Button, Stack, VStack } from "@chakra-ui/react";
-import { auth } from "../Config/Firebase";
+import { auth, db, logout } from "../Config/Firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getUserDocumentList } from "../Utils/userDocument";
 import { useParams } from "react-router-dom";
+import { query, collection, getDocs, where } from "firebase/firestore";
 
-function Profile({ userName, userType }) {
+function Profile({ userType }) {
     const { id } = useParams();
     const [documents, setDocuments] = useState([]);
+    const [userName, setUserName] = useState();
 
-    const getDocs = async () => {
+    const getUserDetails = async () => {
+        const q = query(collection(db, "users"), where("uid", "==", id));
+        const doc = await getDocs(q);
+        const data = doc.docs[0].data();
+        setUserName(data.name);
+    };
+
+    const getDocuments = async () => {
         const data = await getUserDocumentList(id);
         setDocuments(data);
     };
 
     useEffect(() => {
-        getDocs();
+        getDocuments();
+        getUserDetails();
     }, [id]);
 
     return (
@@ -32,7 +42,8 @@ function Profile({ userName, userType }) {
                         ? `${userName}'s Profile`
                         : "My Profile"}
                 </Text>
-                <FileUpload></FileUpload>
+                {userType !== "coach" && <FileUpload></FileUpload>}
+
                 <VStack align="stretch" spacing={4}>
                     {documents &&
                         documents.map((document, index) => (
