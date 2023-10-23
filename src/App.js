@@ -22,6 +22,7 @@ function App() {
     const [user, loading] = useAuthState(auth);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userType, setUserType] = useState("");
+    const [userName, setUserName] = useState("");
 
     const fetchUserData = useCallback(async () => {
         try {
@@ -36,6 +37,7 @@ function App() {
             const doc = await getDocs(q);
             const data = doc.docs[0].data();
             setUserType(data.userType);
+            setUserName(data.name);
         } catch (err) {
             console.error(err);
             alert("An error occurred while fetching user data");
@@ -88,7 +90,9 @@ function App() {
                     <Route
                         exact
                         path="/coachee/:id/profile"
-                        element={<Profile />}
+                        element={
+                            <Profile userName={userName} userType={userType} />
+                        }
                     />
                     <Route exact path="session/:id" element={<Session />} />
                 </Routes>

@@ -6,7 +6,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { getUserDocumentList } from "../Utils/userDocument";
 import { useParams } from "react-router-dom";
 
-function Profile() {
+function Profile({ userName, userType }) {
     const { id } = useParams();
     const [documents, setDocuments] = useState([]);
 
@@ -28,7 +28,9 @@ function Profile() {
                     lineHeight="150%"
                     w="100%"
                 >
-                    {"My Profile"}
+                    {userType === "coach"
+                        ? `${userName}'s Profile`
+                        : "My Profile"}
                 </Text>
                 <FileUpload></FileUpload>
                 <VStack align="stretch" spacing={4}>
