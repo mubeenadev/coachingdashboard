@@ -14,6 +14,7 @@ const ActionCard = (props) => {
     const [newItem, setNewItem] = useState({
         title: "",
         isChecked: false,
+        date: new Date(Date.now()).toLocaleDateString(),
     });
 
     const scrollContainerRef = useRef(null);
@@ -71,7 +72,7 @@ const ActionCard = (props) => {
                                         fontSize="sm"
                                         color="#5A5B6A"
                                     >
-                                        {".date "}
+                                        {data.date}
                                     </Text>
                                 </VStack>
                             </Checkbox>

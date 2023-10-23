@@ -40,7 +40,7 @@ const NavLink = (props) => {
 };
 
 export default function NavBar(props) {
-    const { isLoggedIn } = props;
+    const { isLoggedIn, user, userType } = props;
     const [loading, setLoading] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const navigate = useNavigate(); // Hook to perform navigation
@@ -50,6 +50,8 @@ export default function NavBar(props) {
         console.log("here in navbar");
         navigate("/"); // Navigate back to the home page
     };
+
+    console.log("user###", user);
 
     return (
         <>
@@ -82,6 +84,19 @@ export default function NavBar(props) {
                         ></HStack>
                     </HStack>
                     <Flex alignItems={"center"}>
+                        {isLoggedIn && userType === "coachee" && (
+                            <Button
+                                variant={"solid"}
+                                colorScheme={"teal"}
+                                size={"sm"}
+                                mr={4}
+                                onClick={() =>
+                                    navigate(`/coachee/${user.uid}/profile`)
+                                }
+                            >
+                                Profile
+                            </Button>
+                        )}
                         {isLoggedIn ? (
                             <Button
                                 variant={"solid"}

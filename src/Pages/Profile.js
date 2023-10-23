@@ -4,21 +4,20 @@ import { Box, Text, Button, Stack, VStack } from "@chakra-ui/react";
 import { auth } from "../Config/Firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getUserDocumentList } from "../Utils/userDocument";
+import { useParams } from "react-router-dom";
 
 function Profile() {
-    const [user, loading] = useAuthState(auth);
+    const { id } = useParams();
     const [documents, setDocuments] = useState([]);
 
     const getDocs = async () => {
-        if (user) {
-            const data = await getUserDocumentList(user);
-            setDocuments(data);
-        }
+        const data = await getUserDocumentList(id);
+        setDocuments(data);
     };
 
     useEffect(() => {
         getDocs();
-    }, [user]);
+    }, [id]);
 
     return (
         <Box>

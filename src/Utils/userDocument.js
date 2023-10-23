@@ -12,8 +12,8 @@ import {
 const db = getDatabase();
 const documentRef = dataRef(db, "userdocuments/");
 
-const getUserDocumentList = (user) => {
-    return get(child(documentRef, `${user.uid}/documents`))
+const getUserDocumentList = (uid) => {
+    return get(child(documentRef, `${uid}/documents`))
         .then((snapshot) => {
             if (snapshot.exists()) {
                 console.log(snapshot.val());

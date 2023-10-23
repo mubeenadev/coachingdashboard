@@ -14,7 +14,7 @@ import {
     Heading,
     Text,
     HStack,
-    Checkbox,
+    Image,
     Container,
     FormControl,
     FormLabel,
@@ -22,6 +22,7 @@ import {
 } from "@chakra-ui/react";
 import { OAuthButtonGroup } from "../Utils/OAuthButtonGroup.js";
 import { PasswordField } from "../Utils/PasswordField.jsx";
+import logo from "../Assets/png/logo-no-background.png";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -47,6 +48,9 @@ function Login() {
                 sm: "8",
             }}
         >
+            <Box m={10}>
+                <Image src={logo} alt="Logo" />
+            </Box>
             <Stack spacing="8">
                 <Stack spacing="6">
                     <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
@@ -55,7 +59,7 @@ function Login() {
                         </Heading>
                         <Text color="fg.muted">
                             Don't have an account?
-                            <Link to="/signup">SignUp</Link>
+                            <Link to="/signup"> SignUp </Link>
                         </Text>
                     </Stack>
                 </Stack>
@@ -82,9 +86,7 @@ function Login() {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </Stack>
-                        <HStack justify="space-between">
-                            <Checkbox defaultChecked>Remember me</Checkbox>
-                        </HStack>
+
                         <Stack spacing="6">
                             <Button
                                 onClick={(e) => {
@@ -94,18 +96,6 @@ function Login() {
                             >
                                 Login
                             </Button>
-                            <HStack>
-                                <Divider />
-                                <Text
-                                    textStyle="sm"
-                                    whiteSpace="nowrap"
-                                    color="fg.muted"
-                                >
-                                    or continue with
-                                </Text>
-                                <Divider />
-                            </HStack>
-                            <OAuthButtonGroup onClick={signInWithGoogle} />
                         </Stack>
                     </Stack>
                 </Box>

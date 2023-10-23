@@ -22,9 +22,10 @@ import {
     Text,
     Radio,
     RadioGroup,
+    Image,
 } from "@chakra-ui/react";
-import { OAuthButtonGroup } from "../Utils/OAuthButtonGroup.js";
 import { PasswordField } from "../Utils/PasswordField.jsx";
+import logo from "../Assets/png/logo-no-background.png";
 
 function Register() {
     const [email, setEmail] = useState("");
@@ -61,6 +62,9 @@ function Register() {
                 sm: "8",
             }}
         >
+            <Box m={10}>
+                <Image src={logo} alt="Logo" />
+            </Box>
             <Stack spacing="8">
                 <Stack spacing="6">
                     <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
@@ -69,7 +73,7 @@ function Register() {
                         </Heading>
                         <Text color="fg.muted">
                             Have an account?
-                            <Link to="/login">Login</Link>
+                            <Link to="/login"> Login </Link>
                         </Text>
                     </Stack>
                 </Stack>
@@ -117,9 +121,7 @@ function Register() {
                                 </RadioGroup>
                             </FormControl>
                         </Stack>
-                        <HStack justify="space-between">
-                            <Checkbox defaultChecked>Remember me</Checkbox>
-                        </HStack>
+
                         <Stack spacing="6">
                             <Button
                                 onClick={(e) => {
@@ -130,18 +132,6 @@ function Register() {
                             >
                                 Sign in
                             </Button>
-                            <HStack>
-                                <Divider />
-                                <Text
-                                    textStyle="sm"
-                                    whiteSpace="nowrap"
-                                    color="fg.muted"
-                                >
-                                    or continue with
-                                </Text>
-                                <Divider />
-                            </HStack>
-                            <OAuthButtonGroup onClick={signInWithGoogle} />
                         </Stack>
                     </Stack>
                 </Box>

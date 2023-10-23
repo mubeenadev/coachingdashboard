@@ -14,7 +14,6 @@ function Home() {
     const fetchUserData = useCallback(async () => {
         try {
             if (!user) {
-                console.log("herllo insinde condition ");
                 navigate("/login");
                 return;
             }
