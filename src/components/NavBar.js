@@ -51,8 +51,6 @@ export default function NavBar(props) {
         navigate("/"); // Navigate back to the home page
     };
 
-    console.log("user###", user);
-
     return (
         <>
             <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>

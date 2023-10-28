@@ -9,45 +9,16 @@ import ResetPassword from "./Pages/ResetPassword";
 import CoachHomePage from "./Pages/CoachHomePage";
 import CoacheeHomePage from "./Pages/CoacheeHomePage";
 import Survey from "./Pages/Survey";
-import Session from "./components/Session";
+import Session from "./Pages/Session";
 import NavBar from "./components/NavBar";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db, logout } from "./Config/Firebase";
 import AuthHandler from "./Pages/AuthHandler";
 import Profile from "./Pages/Profile";
-
-import { query, collection, getDocs, where } from "firebase/firestore";
+import { useAuthUserData } from "./Hooks/useAuthUserData";
 
 function App() {
-    const [user, loading] = useAuthState(auth);
+    const { user, userData, loading } = useAuthUserData();
+
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [userType, setUserType] = useState("");
-    const [userName, setUserName] = useState("");
-
-    const fetchUserData = useCallback(async () => {
-        try {
-            if (!user) {
-                return;
-            }
-
-            const q = query(
-                collection(db, "users"),
-                where("uid", "==", user?.uid)
-            );
-            const doc = await getDocs(q);
-            const data = doc.docs[0].data();
-            setUserType(data.userType);
-            setUserName(data.name);
-        } catch (err) {
-            console.error(err);
-            alert("An error occurred while fetching user data");
-        }
-    }, [user]);
-
-    useEffect(() => {
-        if (loading) return;
-        fetchUserData();
-    }, [user, loading, fetchUserData]);
 
     useEffect(() => {
         setIsLoggedIn(!!user);
@@ -59,7 +30,7 @@ function App() {
                     <NavBar
                         isLoggedIn={isLoggedIn}
                         user={user}
-                        userType={userType}
+                        userType={userData.userType}
                     />
                 )}
                 <Routes>
@@ -90,7 +61,7 @@ function App() {
                     <Route
                         exact
                         path="/coachee/:id/profile"
-                        element={<Profile userType={userType} />}
+                        element={<Profile userData={userData} user={user} />}
                     />
                     <Route exact path="session/:id" element={<Session />} />
                 </Routes>

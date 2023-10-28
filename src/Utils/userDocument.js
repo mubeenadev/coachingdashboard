@@ -1,14 +1,15 @@
-import { auth } from "../Config/Firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
 import {
     getDatabase,
     set,
     ref as dataRef,
-    onValue,
     child,
     get,
 } from "firebase/database";
+import { db as FirestoreDb } from "../Config/Firebase";
 
+import { query, collection, getDocs, where } from "firebase/firestore";
+
+//Access realtimeDb
 const db = getDatabase();
 const documentRef = dataRef(db, "userdocuments/");
 
@@ -45,4 +46,18 @@ const addUserDocument = async (user, newDocument) => {
     }
 };
 
-export { getUserDocumentList, addUserDocument };
+const getProfileUserDetailsbyId = async (id) => {
+    try {
+        const usersCollection = collection(FirestoreDb, "users");
+        const q = query(usersCollection, where("uid", "==", id));
+        const doc = await getDocs(q);
+        const data = doc.docs[0].data();
+        console.log(data);
+        return data.name;
+    } catch (error) {
+        console.error("Error fetching user profile:", error);
+        return;
+    }
+};
+
+export { getUserDocumentList, addUserDocument, getProfileUserDetailsbyId };

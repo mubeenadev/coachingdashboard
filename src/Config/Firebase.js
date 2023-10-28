@@ -34,7 +34,7 @@ const firebaseConfig = {
     projectId: "coachconnect-400506",
     storageBucket: "coachconnect-400506.appspot.com",
     messagingSenderId: "646593846571",
-    appId: "1:646593846571:web:16f0bcc8185d338486796e"
+    appId: "1:646593846571:web:16f0bcc8185d338486796e",
 };
 
 // Initialize Firebase
@@ -43,40 +43,6 @@ const auth = getAuth(app);
 const analytics = getAnalytics(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
-
-// Remove if not using Google Auth
-const googleProvider = new GoogleAuthProvider();
-const signInWithGoogle = async () => {
-    console.log("here");
-    try {
-        googleProvider.addScope(
-            "https://www.googleapis.com/auth/calendar.readonly"
-        );
-        const res = await signInWithPopup(auth, googleProvider);
-        const user = res.user;
-
-        // await window.gapi.client.init({
-        //     apiKey: firebaseConfig.apiKey,
-        //     clientId:
-        //         "893730550227-0fi6ei52m5ku35jpago9thn2ed1936c8.apps.googleusercontent.com",
-        //     scope: "https://www.googleapis.com/auth/calendar.readonly",
-        // });
-
-        const q = query(collection(db, "users"), where("uid", "==", user.uid));
-        const docs = await getDocs(q);
-        if (docs.docs.length === 0) {
-            await addDoc(collection(db, "users"), {
-                uid: user.uid,
-                name: user.displayName,
-                authProvider: "google",
-                email: user.email,
-            });
-        }
-    } catch (err) {
-        console.error(err);
-        alert(err.message);
-    }
-};
 
 const logInWithEmailAndPassword = async (email, password) => {
     try {
@@ -128,7 +94,6 @@ export {
     auth,
     db,
     storage,
-    signInWithGoogle,
     logInWithEmailAndPassword,
     registerWithEmailAndPassword,
     sendPasswordReset,
