@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from "react";
-import FileUpload from "../Utils/FileUpload";
-import {
-    Box,
-    Text,
-    Button,
-    Stack,
-    VStack,
-    Spinner,
-    HStack,
-} from "@chakra-ui/react";
+import FileUploader from "../Utils/FileUploader";
+import { Box, Text, Button, Stack, VStack, HStack } from "@chakra-ui/react";
 import {
     getProfileUserDetailsbyId,
     getUserDocumentList,
+    addUserDocument,
 } from "../Utils/userDocument";
 import { useParams } from "react-router-dom";
 import SessionCards from "../components/Profile/SessionCards";
@@ -40,6 +33,14 @@ function Profile({ userData, user }) {
         getDocuments();
     }, [id]);
 
+    const storeFileData = (downloadURL, fileName) => {
+        const newDocument = {
+            filename: fileName,
+            url: downloadURL,
+        };
+        addUserDocument(user, newDocument);
+    };
+
     return (
         <Box>
             <Stack flex="1" width="100%" bg="white" p={3} gap={5}>
@@ -55,7 +56,9 @@ function Profile({ userData, user }) {
                         ? `${userName}'s Profile`
                         : "My Profile"}
                 </Text>
-                {userType !== "coach" && <FileUpload></FileUpload>}
+                {userType !== "coach" && (
+                    <FileUploader onSuccess={storeFileData} />
+                )}
 
                 <VStack align="stretch" spacing={4}>
                     {documents.map((document, index) => (

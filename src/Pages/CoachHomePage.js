@@ -1,14 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-    Box,
-    Button,
-    Link,
-    Stack,
-    VStack,
-    HStack,
-} from "@chakra-ui/react";
-import FullCalendar from '@fullcalendar/react'
-import timeGridPlugin from '@fullcalendar/timegrid'
+import { Box, Button, Link, Stack, VStack, HStack } from "@chakra-ui/react";
+import FullCalendar from "@fullcalendar/react";
+import timeGridPlugin from "@fullcalendar/timegrid";
 import ResourceCard from "../components/Card/Resource/ResourceCard";
 import { getDatabase, ref, set, onValue } from "firebase/database";
 import ClientCard from "../components/Card/Client/ClientCard";
@@ -17,26 +10,22 @@ import { auth } from "../Config/Firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 
-import {
-    getFirestore,
-    getDoc,
-    doc,
-} from "firebase/firestore";
+import { getFirestore, getDoc, doc } from "firebase/firestore";
 
 const CoachHomePage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [resources, setResources] = useState([]);
     const [user, loading] = useAuthState(auth);
-    const [hasCalendarConsent, setCalendarConsent] = useState(false)
-    const [calendarEvents, setCalendarEvents] = useState([])
-    const [calendarStart, setCalendarStart] = useState()
-    const [calendarEnd, setCalendarEnd] = useState()
+    const [hasCalendarConsent, setCalendarConsent] = useState(false);
+    const [calendarEvents, setCalendarEvents] = useState([]);
+    const [calendarStart, setCalendarStart] = useState();
+    const [calendarEnd, setCalendarEnd] = useState();
     const navigate = useNavigate();
 
     const db = getDatabase();
     const firestore = getFirestore();
 
-    const resourcesRef = ref(db, "resources/");
+    const resourcesRef = ref(db, "resources/" + user?.uid);
     const isInitialMount = useRef(true);
 
     const handleModalOpen = () => {
@@ -48,33 +37,39 @@ const CoachHomePage = () => {
     };
 
     useEffect(() => {
-        if(user) {
+        if (user) {
             const docRef = doc(firestore, "users", user.uid);
-            getDoc(docRef).then(snapshot => {
-                setCalendarConsent(!!snapshot.data().hasConsent)
+            getDoc(docRef).then((snapshot) => {
+                setCalendarConsent(!!snapshot.data().hasConsent);
             });
         }
-    }, [user])
+    }, [user]);
 
     useEffect(() => {
-        if(hasCalendarConsent && calendarStart && calendarEnd) {
-            fetch(`https://us-central1-coachconnect-400506.cloudfunctions.net/calendar-event-listener/calendar-events?userId=${user.uid}&start=${calendarStart}&end=${calendarEnd}`)
-            .then(res => res.json())
-            .then(res => {
-                setCalendarEvents(res)
-            })
+        if (hasCalendarConsent && calendarStart && calendarEnd) {
+            fetch(
+                `https://us-central1-coachconnect-400506.cloudfunctions.net/calendar-event-listener/calendar-events?userId=${user.uid}&start=${calendarStart}&end=${calendarEnd}`
+            )
+                .then((res) => res.json())
+                .then((res) => {
+                    setCalendarEvents(res);
+                });
         }
-    }, [hasCalendarConsent, calendarStart, calendarEnd])
+    }, [hasCalendarConsent, calendarStart, calendarEnd]);
 
+    // read the resource list
     useEffect(() => {
-        onValue(resourcesRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                const resourcesArray = Object.values(data);
-                setResources(resourcesArray);
-            }
-        });
-    }, []);
+        if (user) {
+            onValue(resourcesRef, (snapshot) => {
+                const data = snapshot.val();
+
+                if (data) {
+                    const resourcesArray = Object.values(data);
+                    setResources(resourcesArray);
+                }
+            });
+        }
+    }, [user]);
 
     const handleSaveData = (resource) => {
         setResources((prevResources) => [...prevResources, resource]);
@@ -92,31 +87,33 @@ const CoachHomePage = () => {
     return (
         <Box m={8}>
             <HStack mt={8} spacing={8} alignItems="baseline">
-                {hasCalendarConsent ? (<Stack flex="2">
-                <FullCalendar
-                    plugins={[timeGridPlugin]}
-                    initialView="timeGridWeek"
-                    datesSet={({ start, end }) => { 
-                        setCalendarStart(start.toISOString())
-                        setCalendarEnd(end.toISOString())
-                    }}
-                    events={
-                        calendarEvents.map(event => ({
-                            id: event.id,
-                            title: event.summary,
-                            start: event.start.dateTime,
-                            end: event.end.dateTime,
-                        }))
-                    }
-                    eventClick={({ event }) => {
-                        navigate(`/session/${event.id}`)
-                    }}
-                />
-                </Stack>) : (<Button colorScheme="teal">
-                    <Link href="https://us-central1-coachconnect-400506.cloudfunctions.net/calendar-event-listener/auth/google">
-                        Authorize Google Calendar
-                    </Link>
-                </Button>)}
+                {hasCalendarConsent ? (
+                    <Stack flex="2">
+                        <FullCalendar
+                            plugins={[timeGridPlugin]}
+                            initialView="timeGridWeek"
+                            datesSet={({ start, end }) => {
+                                setCalendarStart(start.toISOString());
+                                setCalendarEnd(end.toISOString());
+                            }}
+                            events={calendarEvents.map((event) => ({
+                                id: event.id,
+                                title: event.summary,
+                                start: event.start.dateTime,
+                                end: event.end.dateTime,
+                            }))}
+                            eventClick={({ event }) => {
+                                navigate(`/session/${event.id}`);
+                            }}
+                        />
+                    </Stack>
+                ) : (
+                    <Button colorScheme="teal">
+                        <Link href="https://us-central1-coachconnect-400506.cloudfunctions.net/calendar-event-listener/auth/google">
+                            Authorize Google Calendar
+                        </Link>
+                    </Button>
+                )}
 
                 <VStack flex="1" spacing={8}>
                     <ClientCard />

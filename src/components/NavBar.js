@@ -83,17 +83,28 @@ export default function NavBar(props) {
                     </HStack>
                     <Flex alignItems={"center"}>
                         {isLoggedIn && userType === "coachee" && (
-                            <Button
-                                variant={"solid"}
-                                colorScheme={"teal"}
-                                size={"sm"}
-                                mr={4}
-                                onClick={() =>
-                                    navigate(`/coachee/${user.uid}/profile`)
-                                }
-                            >
-                                Profile
-                            </Button>
+                            <>
+                                <Button
+                                    variant={"solid"}
+                                    colorScheme={"teal"}
+                                    size={"sm"}
+                                    mr={4}
+                                    onClick={() =>
+                                        navigate(`/coachee/${user.uid}/profile`)
+                                    }
+                                >
+                                    Profile
+                                </Button>
+                                <Button
+                                    variant={"solid"}
+                                    colorScheme={"teal"}
+                                    size={"sm"}
+                                    mr={4}
+                                    onClick={() => navigate("/survey")}
+                                >
+                                    Take Survey
+                                </Button>
+                            </>
                         )}
                         {isLoggedIn ? (
                             <Button

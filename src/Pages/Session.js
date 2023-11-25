@@ -20,6 +20,7 @@ import { useAuthUserData } from "../Hooks/useAuthUserData";
 function Session() {
     const [notes, setNotes] = useState("");
     const [coachNotes, setCoachNotes] = useState("");
+    const [coachId, setCoachId] = useState("");
     const [action, setActions] = useState([]);
     const [resource, setResource] = useState([]);
     const [sessionDetail, setSessionDetail] = useState();
@@ -35,7 +36,7 @@ function Session() {
     const actionRef = ref(db, "session/" + id + "/actionItems");
     const noteRef = ref(db, "session/" + id + "/notes");
     const sessionRef = ref(db, "session/" + id);
-    const resourceRef = ref(db, "resources/");
+    const resourceRef = ref(db, "resources/" + coachId);
 
     useEffect(() => {
         get(sessionRef)
@@ -62,20 +63,24 @@ function Session() {
                 setActions(data);
             }
         });
+
+        getDoc(doc(firestore, "session", id)).then((doc) => {
+            if (doc.exists) {
+                setCoachId(doc.data().coachId);
+                setFirestoreSessionDetail(doc.data());
+                setCoachNotes(doc.data().coachNotes);
+            }
+        });
+    }, []);
+
+    useEffect(() => {
         onValue(resourceRef, (snapshot) => {
             const data = snapshot.val();
             if (data && data !== resource) {
                 setResource(data);
             }
         });
-
-        getDoc(doc(firestore, "session", id)).then((doc) => {
-            if (doc.exists) {
-                setFirestoreSessionDetail(doc.data());
-                setCoachNotes(doc.data().coachNotes);
-            }
-        });
-    }, []);
+    }, [coachId]);
 
     useEffect(() => {
         if (isInitialMount.current) {

@@ -114,8 +114,8 @@ const ClientModal = ({ isOpen, onClose, onSave }) => {
                                         setCoachCategory(e.target.value)
                                     }
                                 >
-                                    <option value="AVG">AVG</option>
-                                    <option value="private">Private</option>
+                                    <option value="AVGS">AVG</option>
+                                    <option value="others">Others</option>
                                 </Select>
                             </FormControl>
                         </>

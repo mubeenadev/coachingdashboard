@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { storage } from "../Config/Firebase";
-
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import {
     Button,
@@ -12,33 +11,11 @@ import {
     Icon,
 } from "@chakra-ui/react";
 import { FaUpload } from "react-icons/fa";
-import { auth } from "../Config/Firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { getDatabase, set, ref as dataRef, onValue } from "firebase/database";
-import { addUserDocument } from "./userDocument";
 
-function FileUpload() {
-    // State to store selected file
+function FileUploader({ onSuccess }) {
     const [file, setFile] = useState(null);
-    const [user, loading] = useAuthState(auth);
-    const [document, setDocument] = useState({});
-    const db = getDatabase();
-    const documentRef = dataRef(db, "userdocuments/");
     const fileInputRef = useRef(null);
     const isInitialMount = useRef(true);
-
-    useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-        } else {
-            // set(documentRef, document);
-            console.log("document", document);
-        }
-    }, [document]);
-
-    const handleCustomButtonClick = () => {
-        fileInputRef.current.click();
-    };
 
     // Progress state
     const [percent, setPercent] = useState(0);
@@ -51,6 +28,10 @@ function FileUpload() {
             setFile(selectedFile);
         }
     }
+
+    const handleCustomButtonClick = () => {
+        fileInputRef.current.click();
+    };
 
     const handleUpload = () => {
         if (!file) {
@@ -82,16 +63,9 @@ function FileUpload() {
                 // Upload completed, get the download URL
                 getDownloadURL(uploadTask.snapshot.ref)
                     .then((downloadURL) => {
-                        const newDocument = {
-                            filename: file.name,
-                            url: downloadURL,
-                        };
-                        addUserDocument(user, newDocument);
+                        // Call the callback function with the download URL
+                        onSuccess(downloadURL, file.name);
 
-                        console.log(
-                            "File uploaded successfully. Download URL:",
-                            downloadURL
-                        );
                         alert("File uploaded successfully!");
                         setPercent(0);
                         setUploading(false);
@@ -110,10 +84,17 @@ function FileUpload() {
         setUploading(true);
     };
 
+    useEffect(() => {
+        if (!isInitialMount.current) {
+            handleUpload();
+        }
+        isInitialMount.current = false;
+    }, [file]);
+
     return (
         <HStack
             flex="1"
-            width="50%"
+            width="100%"
             justifyContent="center"
             alignItems="center"
             spacing={4}
@@ -146,15 +127,6 @@ function FileUpload() {
                 </InputLeftElement>
             </InputGroup>
 
-            <Button
-                colorScheme="teal"
-                onClick={handleUpload}
-                isDisabled={uploading}
-                w={"50%"}
-            >
-                Upload to Firebase
-            </Button>
-
             {uploading && (
                 <CircularProgress
                     value={percent}
@@ -167,4 +139,4 @@ function FileUpload() {
     );
 }
 
-export default FileUpload;
+export default FileUploader;

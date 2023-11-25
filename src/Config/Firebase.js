@@ -28,14 +28,14 @@ import { Navigate } from "react-router-dom";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyCFKdmULC-aOS1FRXTZbsqoag7jctcCOK4",
-    authDomain: "coachconnect-400506.firebaseapp.com",
-    databaseURL: "https://coachconnect-400506-default-rtdb.firebaseio.com",
-    projectId: "coachconnect-400506",
-    storageBucket: "coachconnect-400506.appspot.com",
-    messagingSenderId: "646593846571",
-    appId: "1:646593846571:web:16f0bcc8185d338486796e",
-};
+    apiKey: "",
+    authDomain: "",
+    databaseURL: "",
+    projectId: "",
+    storageBucket: "",
+    messagingSenderId: "",
+    appId: "",
+}; // input the keys here
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

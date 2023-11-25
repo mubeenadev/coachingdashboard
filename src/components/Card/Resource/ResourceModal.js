@@ -12,7 +12,9 @@ import {
     FormLabel,
     Input,
     Select,
+    Text,
 } from "@chakra-ui/react";
+import FileUploader from "../../../Utils/FileUploader";
 
 const ResourceModal = ({ isOpen, onClose, onSave }) => {
     const initialRef = React.useRef();
@@ -20,15 +22,40 @@ const ResourceModal = ({ isOpen, onClose, onSave }) => {
 
     const [resourceTitle, setResourceTitle] = useState("");
     const [resourceCategory, setResourceCategory] = useState("");
-    const [link, setLink] = useState("");
+    const [resourceURL, setResourceURL] = useState("");
+    const [upload, setUpload] = useState(false);
+    const [isError, setIsError] = useState(false);
+
+    const updateDownloadURL = (url) => {
+        if (url) {
+            setResourceURL(url);
+            setUpload(true);
+        }
+    };
 
     const handleSave = () => {
-        onSave({
-            title: resourceTitle,
-            link,
-            category: resourceCategory,
-        });
-        onClose();
+        if (
+            resourceTitle !== "" &&
+            resourceURL !== "" &&
+            resourceCategory !== ""
+        ) {
+            console.log("inside oif");
+            if (upload) {
+                onSave({
+                    title: resourceTitle,
+                    link: resourceURL,
+                    category: resourceCategory,
+                });
+                setResourceURL("");
+                setResourceTitle("");
+                setResourceCategory("");
+                onClose();
+            }
+        } else {
+            // Set an error message to be displayed
+            console.log("errekmj");
+            setIsError(true);
+        }
     };
 
     return (
@@ -43,7 +70,7 @@ const ResourceModal = ({ isOpen, onClose, onSave }) => {
                 <ModalHeader>Add New Resource</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>
-                    <FormControl>
+                    <FormControl isInvalid={isError}>
                         <FormLabel>Title</FormLabel>
                         <Input
                             ref={initialRef}
@@ -52,6 +79,7 @@ const ResourceModal = ({ isOpen, onClose, onSave }) => {
                             onChange={(e) => setResourceTitle(e.target.value)}
                         />
                     </FormControl>
+
                     <FormControl mt={4}>
                         <FormLabel>Category</FormLabel>
                         <Select
@@ -68,12 +96,11 @@ const ResourceModal = ({ isOpen, onClose, onSave }) => {
                     </FormControl>
 
                     <FormControl mt={4}>
-                        <FormLabel>Link</FormLabel>
-                        <Input
-                            placeholder="Link to the resource"
-                            value={link}
-                            onChange={(e) => setLink(e.target.value)}
-                        />
+                        <FormLabel>File</FormLabel>
+                        <FileUploader onSuccess={updateDownloadURL} />
+                    </FormControl>
+                    <FormControl mt={4}>
+                        {isError && <Text mt={2}>All fields are required</Text>}
                     </FormControl>
                 </ModalBody>
 
